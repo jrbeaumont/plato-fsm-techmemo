@@ -1,0 +1,123 @@
+%% Template for Memo Series
+%% Please modify the MEMO-data section below and
+%% paste the report text into the space at the end of this file.
+\documentclass[british]{article}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage[letterpaper]{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{graphicx}
+\usepackage{setspace}
+\onehalfspacing
+
+% Extra packages
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\lyxline}[1][1pt]{%
+  \par\noindent%
+  \rule[.5ex]{\linewidth}{#1}\par}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+%% MEMO-data section to define report name, authors, contacts, date, number, etc.
+%% Please modify it as appropriate.
+\def\MEMOtitle{Memo Title Here}
+\def\MEMOauthors{Jonathon Beaumont, Adrian Wheeldon}
+\def\MEMOcontacts{\{j.r.beaumont, a.r.wheeldon2\}@ncl.ac.uk}
+\def\MEMOyear{2017}
+\def\MEMOdate{March \MEMOyear}
+\def\MEMOnumber{NCL-EEE-MICRO-MEMO-\MEMOyear-010}
+%% End od MEMO-data section
+
+%% Page decoration options for the body of the memo
+\pagenumbering{arabic}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\lhead{\MEMOauthors: \MEMOtitle}
+\chead{}
+\rhead{}
+\lfoot{\MEMOnumber, Newcastle University}
+\cfoot{}
+\rfoot{\thepage}
+\sloppy
+
+\thispagestyle{empty}
+
+\begin{center}
+{\Large ~}{\footnotesize \vspace{-22mm}
+}
+\par\end{center}{\footnotesize \par}
+
+{\Large \lyxline{\Large}}{\Large \par}
+
+\begin{center}
+%
+\begin{minipage}[b][1\totalheight][t]{0.45\columnwidth}%
+{\footnotesize \includegraphics[scale=0.14]{logonewcastle.jpg}}{\footnotesize \par}
+
+\noindent {\footnotesize \smallskip{}
+}{\footnotesize \par}
+
+{\footnotesize Copyright~\copyright~\MEMOyear~Newcastle University}%
+\end{minipage}%
+\begin{minipage}[b][1\totalheight][t]{0.45\columnwidth}%
+\noindent {\footnotesize $\mu$Systems Research Group}\\
+{\footnotesize School of Electrical and Electronic Engineering}\\
+{\footnotesize Merz Court}\\
+{\footnotesize Newcastle University}\\
+{\footnotesize Newcastle upon Tyne, NE1 7RU, UK}{\footnotesize \par}
+
+\noindent {\footnotesize \medskip{}
+}{\footnotesize \par}
+
+\noindent \texttt{\footnotesize http://async.org.uk/}%
+\end{minipage}
+\par\end{center}
+
+\lyxline{\normalsize}
+
+\vspace{15mm}
+
+
+\begin{center}
+\textbf{\huge \MEMOtitle}
+\par\end{center}{\huge \par}
+
+\begin{center}
+\bigskip{}
+{\Large \MEMOauthors}
+\par\end{center}{\Large \par}
+
+\begin{center}
+\texttt{\small \MEMOcontacts}
+\par\end{center}{\small \par}
+
+\begin{center}
+\bigskip{}
+{\large \MEMOnumber}
+\par\end{center}{\large \par}
+
+\begin{center}
+{\large \MEMOdate}
+\par\end{center}{\large \par}
+
+\vspace{15mm}
+
+\input{abstract}
+\newpage{}
+
+\thispagestyle{fancy}
+
+% Add sections here
+\input{algorithm}
+
+\end{document}
