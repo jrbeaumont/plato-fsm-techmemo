@@ -1,0 +1,27 @@
+%% Plato FSM Translation Tech Memo
+%% FSM Translation Algorithm
+%%
+%% Adrian Wheeldon
+%% March 2017
+\begin{algorithm}[]
+\begin{algorithmic}
+	\caption{FSM Translation Algorithm\label{alg:fsm}}
+	\For {\textbf{each} \emph{causality} ([effect], cause) \textbf{in} causalities}
+		\State \textbf{removeAll} cause \textbf{from} [effect]
+		\State [signalList] $\leftarrow$ \textbf{concatenate} ([effect], cause)
+	\EndFor
+	\State allSignals $\leftarrow$ \textbf{setUnion} ([[signalList]])
+	\For {\textbf{each} \emph{transitionList} tl \textbf{in} [[signalList]]}
+		\State missingTransitions $\leftarrow$ \textbf{setDifference} (tl, allSignals)
+		\For {\textbf{each} \emph{transition} t \textbf{in} missingTransitions}
+			\State \textbf{setPolarity} (t, `x')
+		\EndFor
+		\State allTransitions $\leftarrow$ \textbf{concatenate} (tl, missingTransitions)
+		\State sortedTransitions $\leftarrow$ \textbf{sortBySignalName} (allTransitions)
+		\State destEncodings $\leftarrow$ \textbf{getPolarity} (sortedTransitions)
+		\State srcEncodings $\leftarrow$ \textbf{flipEffectPolarity} (destEncodings)
+		\State incompleteArcs $\leftarrow$ \textbf{makeArcs} (srcEncodings, destEncodings)
+		\State \textbf{expandX} (incompleteArcs)
+	\EndFor
+\end{algorithmic}
+\end{algorithm}
