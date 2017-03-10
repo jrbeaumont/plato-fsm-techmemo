@@ -4,6 +4,19 @@
 %% Adrian Wheeldon
 %% March 2017
 \section{FSM Algorithm}\label{sec:algo}
+\begin{itemize}
+	\item Find all the signal names used in the design.
+	\item Add the signals missing from each causality with an `X'
+		transition.
+	\item Create destination state encodings by taking sorted list of
+		transition polarities.
+	\item Create source state encodings by taking the corresponding
+		destination encoding and flipping the \emph{effect} transition.
+	\item Expand the `X' transitions for each causality into a matching
+		pair. Eg. \texttt{(100x, 001x)} will expand to \texttt{(1000,
+		0010)} and \texttt{(1001, 0011)}.
+\end{itemize}
+
 \begin{algorithm}[]
 \begin{algorithmic}
 	\caption{FSM Translation Algorithm\label{alg:fsm}}
