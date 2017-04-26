@@ -1,5 +1,24 @@
 %% Plato FSM Translation Tech Memo
 %% Abstract
 \begin{abstract}
-  An abstract.
+Asynchronous circuits are becoming increasingly important in system design for Internet-of-Things, where
+they orchestrate the interface between big synchronous computation components and the analogue environment,
+which is inherently asynchronous and has high uncertainty with respect to power supply, temperature
+and long-term ageing effects. However, wide adoption of asynchronous circuits by industrial users is hindered
+by a steep learning curve for asynchronous control models, such as Signal Transition Graphs, that are developed
+by the academic community for specification, verification and synthesis of asynchronous circuits.
+Finite State Machines are a common model type used in many applications, including desiging computer-based systems  and 
+in many cases, a Finite State Machine may provide insight into the intricacies of signal interactions in an asynchronous circuit.
+They are also more recognisable for industrial designers than Signal Transition Graphs are, for example. 
+
+Previously, we have introduced a novel high-level description language for asynchronous circuits, which
+is based on behavioural concepts - high-level descriptions of asynchronous circuit requirements, that can be
+shared, reused and extended by users. We have also introduced an algorithm to automatically translate these to 
+Signal Transition Graphs for further processing by conventional asynchronous and synchronous EDA tools. 
+In this document, we aim to introduce an algorithm for translating concepts to Finite State Machines, which will 
+allow a user to view the complexities that may be abstract in a Signal Transition Graph, without having to change the
+concept specification in anyway. Both of these algorithms are implemented in the open-source tool, \noun{Plato}. This
+tool is also integrated into the open-source tool-suite \noun{Workcraft}, providing several other back-end tools for 
+a streamlined design process for asynchronous circuits. 
+
 \end{abstract}
