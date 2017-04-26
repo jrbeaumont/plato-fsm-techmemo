@@ -1,6 +1,59 @@
 %% Plato FSM Translation Tech Memo
-%% Abstract
+%% Introduction
 
 \section{Introduction \label{sec:intro}}
 
-I will include a citation here \cite{2014_mokhov_pg}, so the continuous integration works.
+As discussed in~\cite{2015_Beaumont_MEMOCODE}, concepts are a useful language
+for specifying the behaviours of asynchronous circuits,
+in the preferred form of the user. This can be as
+low-level signal-level concepts, or higher-level gate or
+protocol-level concepts. It also allows the definition
+of their own concepts, which can be reused within
+the same or any other specification that they wish, to
+increase the speed of designing a system, and future
+systems.
+
+In~\cite{2016_concept_STG_translation}, we introduce an 
+algorithm for automatically translating concepts to Signal Transition Graphs (STGs). 
+This is aimed at solving problems that can arise with the monolothic approach
+for desigining asynchronous circuits with STGs, such as a lack of reusability, and 
+poor scalability. 
+
+Since STGs are so commonly used for desinging asynchronous circuits,
+there are several tools available, such as \noun{Petrify}~\cite{Cortadella}, \noun{Mpsat}~\cite{khomenko2004detecting}, \noun{Versify}~\cite{i1997formal},
+\noun{Workcraft}~\cite{Sokolov-2016-book-Workcraft}\cite{Workcraft_website}, and others, which can automatically verify and synthesize
+asynchronous circuits. Automated translation of concepts to STGs therefore allows concept specifications
+to be usable with these tools, avoiding the need to develop verification and synthesis tools specifically for 
+concepts, which is a timely process. 
+
+Finite State Machines (FSMs) can be used for a wide range of applications, from small scale
+to large scale, low-level to high-level system designs. Because of this, they are commonly taught
+as a method of designing overall system operation. This means that many designers in industry
+are aware of of FSMs, and are more likely to understand them than STGs, which are developed
+and primarily used in academia. For this reason, it may be useful when specifying an asynchronous circuit 
+using concepts, to be able to view the system as an FSM, and automatic translation will allow this to occur quickly.
+
+However, while viewing the FSM may be useful for a user, STG tools are still the primary methods of 
+verifiying and synthesizing asynchronous circuits. The concepts language does not provide any
+concepts only for use when translating to either an FSM or an STG specifically, so any concept specification
+which translates to one of these will also produce an equivalent model of the alternative formalism, with
+no changes to the specification. Each translation algorithm handles the differences in the two formalisms,
+producing the correct construcs for that formalism, based on the provided concepts. 
+
+The open-source command-line tool \noun{Plato}~\cite{2017_plato_github}, is authoured in Haskell, and implements the domain-specific language of concepts, 
+as well as the algorithms for translating this language to both STGs and FSMs. \noun{Plato} is included as a
+back-end tool for \noun{Workcraft}~\cite{Sokolov-2016-book-Workcraft}\cite{Workcraft_website}, where it is integrated to provide
+a graphical user interface for authoring and translating concepts. It also includes STG verification and synthesis tools, thus providing
+a streamlined interface for designing asynchronous systems from concept specification, to implementation. 
+
+Our contributions are as follows:
+\begin{itemize}
+
+\item We discuss Finite State Machines, their uses, their differences from STGs and how concepts can be used to produce FSMs in Section~\ref{sec:fsms}
+
+\item We present the implemented algorithm for translating
+concepts to FSMs in Section~\ref{sec:algorithm}.
+
+\item We present a brief example of the design flow in Section~\ref{sec:design-flow}
+
+\end{itemize}
