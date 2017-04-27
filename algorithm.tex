@@ -27,6 +27,7 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 \Cref{tab:enc_complete} gives the complete source and destination state encodings where the \emph{effect} denotes the FST arc label.
 
 \begin{table}[ht]
+\parbox{0.23\linewidth}{%
 \caption{Table}\label{tab:causality}
 \centering
 \begin{tabular}{@{}ll@{}}
@@ -40,10 +41,12 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 	$c^{+}$			& $b^{-}$ \\
 	\bottomrule
 \end{tabular}
-\end{table}
-
-\begin{table}[ht]
-	\caption{Missing signals added to cause list (bold) with incomplete state encoding.}\label{tab:enc}
+}
+%
+\hfill
+%
+\parbox{0.43\linewidth}{%
+\caption{Missing signals added to cause list (bold) with incomplete state encoding.}\label{tab:enc}
 \centering
 \begin{tabular}{@{}llll@{}}
 	\toprule
@@ -57,9 +60,11 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 	$\mathbf{a^{x}}$, $c^{+}$	& $b^{-}$ & \texttt{x01} & \texttt{x11}\\
 	\bottomrule
 \end{tabular}
-\end{table}
-
-\begin{table}[ht]
+}
+%
+\hfill
+%
+\parbox{0.28\linewidth}{%
 \caption{Complete state encodings after expansion of `don't care' states.}\label{tab:enc_complete}
 \centering
 \begin{tabular}{@{}llll@{}}
@@ -78,6 +83,7 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 	$b^{-}$ & \texttt{101} & \texttt{111}\\
 	\bottomrule
 \end{tabular}
+}
 \end{table}
 
 \begin{algorithm}[ht]
