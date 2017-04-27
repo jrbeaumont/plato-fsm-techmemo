@@ -1,4 +1,114 @@
 %% Plato FSM Translation Tech Memo
 %% FSM background
-
+\newpage
 \section {Finite State Machines \label {sec:fsms}}
+
+Finite State Machines can be used to model behaviour of all levels of system~\cite{Taraate2016}. 
+The formalism contains states, which are the vertices, and transitions between these states, which 
+are the arcs. Applied to each transition is the event for that transition to occur, causing a change 
+of state. Depending on the level of system that is being modelled, this event can be a condition being met,
+such as the temperature being over a certain value, or it could be a signal transition. 
+
+Regardless of system level, an FSM model always shows some key parts of the system. Each state a system is 
+in usually has an associated output or action, which occurs upon entry to this state and continues while the system remains
+in this state, and when an event occurs, the state will change depending on what state the system is in, and which event occured. 
+
+For example, Figure~\ref{fig:stopwatch} contains the example FSM which models the 
+high-level behaviour of a stopwatch.
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[scale=0.5]{images/stopwatch-fsm}
+\par\end{centering}
+\protect\caption{\label{fig:stopwatch} Stopwatch FSM}
+\end{figure}
+
+\noindent There are four states, which are:
+
+\begin{itemize}
+
+\item Zero - The initial state, where the timer and display are reset to 0. 
+
+\item Stop - In this state, the timer and display are paused.
+
+\item Run - While in this state, the timer is counting, and the display shows this.
+
+\item Lap - In this state, the timer continues counting but the display shows the time when lap was entered.
+
+\end{itemize}
+
+\noindent The transitions between these are based on three buttons:
+
+\begin{itemize} 
+
+\item Reset button - When it has been stopped (in the stop state), moves the system to the zero state to reset everything to 0.
+
+\item Start/Stop button - Used to move the stopwatch from the stop state to the run state, and back. This starts and pauses the timer. 
+
+\item Lap button - This moves the system from the run state, to the lap state, to hold a time on the display for recording. 
+                              Also moves it back to the run state, updating the display to the actual time
+                              
+\end{itemize}
+
+\noindent Also, not that when the zero state is reached, there is an $\varepsilon$ symbol. This symbol represents that
+a transition occurs without any requirements. For this example, it is important, as when the system initialises or is reset, we 
+want the display and counter to be set to 0, and following this, be ready to start counting. This therefore resets the system, and
+moves into the stop state, ready for the timer to being counting from a start/stop button press. 
+
+This is a high-level model as it describes the possible states of the system, but not the low-level implementation details. 
+For example, we know what buttons to press to move between states, but there is nothing to say what constitues a button ``press'', 
+and, while we know how the display should react depending on the state, we have not provided any details on how we control the display. 
+
+The stopwatch behaviour however does identify the key parts. Each state has an associated action, which we have described. Each transition
+has an associated event, these being either button presses, or nothing. We also know that for each state, we can transition to a new state if a
+specific button is pressed, but if that button is not associated with a transition from the current state, the state will remain the same, for example, 
+if we press the reset button while in the run state, we cannot changes state. 
+
+This example can be used further by adding some implementation details, based on how the components, the buttons and display, work, yet 
+the behaviour of the stop-watch will remain the same. 
+
+FSMs can be used to model circuits at the signal-level, as with STGs. In this case, the actions associated with the states can be simply the
+arrangement of the signals in the system, the effect of this arrangment causing changes in the environment of the circuit itself. The events 
+associated with the transitions between states can be signal transitions. For example, Figure~\ref{fig:handshake-fsm} contains a handshake FSM.
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[scale=0.5]{images/handshake-fsm}
+\par\end{centering}
+\protect\caption{\label{fig:handshake-fsm} Handshake FSM}
+\end{figure}
+
+In this example there is one input signal, $a$, one output signal, $b$, and four states: 
+
+\begin{itemize}
+
+\item 00 - The initial state, where both input and output have transitioned low.
+
+\item 10 - The input has gone from 0 to 1.
+
+\item 11 - The output transitions from 0 to 1.
+
+\item 01 - The input transitions low, from 1 to 0.
+
+\end{itemize}
+
+\noindent The transitions between feature the events of these signals transitioning high and low. 
+
+In this case, we have included the implementation details, specifically in what signal transitions cause a changes of state, 
+therefore this can be considered a low-level FSM model. However, this doesn't change the fact that the key behaviours are identified. 
+
+Since FSMs can be used generally at all different levels of behavioural modelling, the requirements for what constitutes and event for
+a state transition, are not stated, therefore, as with these examples they can be a button press or a signal transition. There exists 
+a form of FSM specifically designed for modelling circuit behaviour at signa-level, such as in Figure~\ref{fig:handshake-fsm} named 
+\emph{Finite State Transducers} (FSTs). 
+
+FSTs aim to be used for specifications of circuits, and can be used for specifying asynchronous circuits. They allow signals
+to be set as specific types, inputs, outputs and internals for example, but do not differ in how they show behaviours. For this reason, 
+they can be converted to and from other modelling methods aimed at showing signal-level behaviours such as STGs, and this applies
+to \noun{Plato}, where a concept specification must be able to produce either an FSM or an STG without any changes to the specification. 
+
+When using \noun{Workcraft}, an STG can be translated from a concept specification using \noun{Plato} from the STG plugin, and while \noun{Workcraft} does
+feature both an FSM and FST plugin, for the interoperability of STGs and FSTs, a concept specification can be translated only to an FST. For this paper however, 
+we will continue to FSTs translated from concepts as FSMs. 
+
+\subsection{FSMs and STGs \label{sub:FSMs-STGs}}
