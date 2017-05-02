@@ -5,12 +5,21 @@
 %% March 2017
 \section{Concepts to FSM translation algorithm}\label{sec:algorithm}
 
-In order to create a complete encoding of a state, we must first find all of the signals that exist in the system.
-We do this by first removing any \emph{effect} transition which may occur in the \emph{cause} list, and then construct a signal list from each causality.
+The algorithm takes as input a complete Concepts specification.
+The output of the algorithm is a plaintext representation of a state graph.
+This can be imported into the \noun{Workcraft} tool-suite and viewed graphically as an FST\@.
+
+Psuedocode for the translation algorithm can be seen in~\cref{alg:fsm}.
+In brief, the algorithm directly extracts pairs of causes and effects from the Concepts specification (lines 1--5).
+It then infers all possible source and destination states with associated arcs (lines 6--17).
+
+In order to create a complete encoding of a single state, we must first find all of the signals that exist in the system.
+We do this by first removing any \emph{effect} transition which may occur in the \emph{cause} list to avoid duplicate signals.
+We then construct a signal list from each causality.
 Taking the union of the signal lists from all causalities then gives us the complete set of signals in the system.
 In our example, we obtain the list of signals $a$, $b$, $c$.
 
-Now we must add to each causality any signals that are missing so that we can begin to create a complete encoding.
+Since each FST state must contain information for every signal, we must add to each causality any signals that are missing.
 \Cref{tab:enc} shows the new signals in bold, which are added with an `x', or `don't care' polarity since both rising or falling transitions give valid states for these signals.
 
 Now that all signals in the design are accounted for in each causality (that is, the concatenation of \emph{Causes} and \emph{Effect} in \cref{tab:enc} contains all the signals \texttt{a}, \texttt{b}, and \texttt{c}), we can begin constructing state encodings.
@@ -24,9 +33,11 @@ Since this means the corresponding signal can be either high or low, we must tra
 We expand these don't care states into all of the possible congruent transition permutations.
 For example, from the final row in \cref{tab:enc} we have the states \texttt{x01}, \texttt{x11}.
 These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt{101}, \texttt{111}.
-\Cref{tab:enc_complete} gives the complete source and destination state encodings where the \emph{effect} denotes the FST arc label.
+\Cref{tab:enc_complete} gives the complete source and destination state encodings.
+The \emph{effect} transition becomes the arc which links the source state to the destination state in the FST\@.
 
 \begin{table}[ht]
+\parbox{0.23\linewidth}{%
 \caption{Table}\label{tab:causality}
 \centering
 \begin{tabular}{@{}ll@{}}
@@ -40,10 +51,12 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 	$c^{+}$			& $b^{-}$ \\
 	\bottomrule
 \end{tabular}
-\end{table}
-
-\begin{table}[ht]
-	\caption{Missing signals added to cause list (bold) with incomplete state encoding.}\label{tab:enc}
+}
+%
+\hfill
+%
+\parbox{0.43\linewidth}{%
+\caption{Missing signals added to cause list (bold) with incomplete state encoding.}\label{tab:enc}
 \centering
 \begin{tabular}{@{}llll@{}}
 	\toprule
@@ -57,9 +70,11 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 	$\mathbf{a^{x}}$, $c^{+}$	& $b^{-}$ & \texttt{x01} & \texttt{x11}\\
 	\bottomrule
 \end{tabular}
-\end{table}
-
-\begin{table}[ht]
+}
+%
+\hfill
+%
+\parbox{0.28\linewidth}{%
 \caption{Complete state encodings after expansion of `don't care' states.}\label{tab:enc_complete}
 \centering
 \begin{tabular}{@{}llll@{}}
@@ -78,11 +93,12 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 	$b^{-}$ & \texttt{101} & \texttt{111}\\
 	\bottomrule
 \end{tabular}
+}
 \end{table}
 
 \begin{algorithm}[ht]
-\begin{algorithmic}
-	\caption{FSM Translation Algorithm\label{alg:fsm}}
+\begin{algorithmic}[1]	% Optional param is frequency of line numbering
+	\caption{Concepts to FSM Translation Algorithm\label{alg:fsm}}
 	\For {\textbf{each} \emph{causality} ([effect], cause) \textbf{in} causalities}
 		\State \textbf{removeAll} cause \textbf{from} [effect]
 		\State [signalList] $\leftarrow$ \textbf{concatenate} ([effect], cause)
