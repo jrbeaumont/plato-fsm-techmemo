@@ -112,3 +112,62 @@ feature both an FSM and FST plugin, for the interoperability of STGs and FSTs, a
 we will continue to FSTs translated from concepts as FSMs. 
 
 \subsection{FSMs and STGs \label{sub:FSMs-STGs}}
+
+As with Signal Transition Graphs, Finite State Machines can be used to model the behaviour of asynchronous circuits at the signal level. However,
+the methods that they use to show the interactions between signals are quite varied. There are similarities, for example, Figure~\ref{fig:handshakes-all}
+shows a handshake in both STG and FSM form.
+
+\begin{figure}[H]
+\subfigure[Handshake in FSM form] {
+  \centering
+  \includegraphics[scale=0.5]{images/handshake-fsm}
+  \label{fig:handshakes-all-fsm}
+  }
+\subfigure[Handshake in STG form] {
+  \centering
+  \includegraphics[scale=0.64]{images/handshake-stg}
+  \label{fig:handshakes-all-stg}
+  }
+  \caption{\label{fig:handshakes-all} Handshakes in both FSM and STG format}
+\end{figure}
+
+The FSM handshake~(Figure~\ref{fig:handshakes-all-fsm}) and the STG handshake~(Figure~\ref{fig:handshakes-all-stg}) are both in a 
+square shape, indicating that there are two signals involved, horizontal transitions indicate one signal's transitions, and vertical transitions 
+indicating the other. These are fairly simple structures in both modelling formalism however. 
+
+The major differences between these modelling methods are shown when concurrency comes into play. When two or more signals are
+set to transition in the same period, i.e. one signal transition causes two other signal transitions, the latter two not having any
+strict requirements on the orders they transition. 
+
+To demonstrate the differences, let's use the example of a C-element with environment. In this example, there are three signals, 
+$a$ and $b$ are inputs signals, and $c$ is an output signal. $a$ and $b$ are the input signals to a C-element, the output of which is $c$. 
+The environment is composed of two inverters, both inputs of which are signal $c$, and the output of one is signal $a$, the other is signal $b$. 
+If we model these as both an FSM and an STG, we are provided with the models as seen in Figure~\ref{fig:c-element-env}.
+
+\begin{figure}[H]
+\subfigure[A C-Element with environment in FSM form] {
+  \centering
+  \includegraphics[scale=0.45]{images/c-element-env-fsm}
+  \label{fig:c-element-env-fsm}
+  }
+\subfigure[A C-element with environment in STG form] {
+  \centering
+  \includegraphics[scale=0.4]{images/c-element-env-stg}
+  \label{fig:c-element-env-stg}
+  }
+  \caption{\label{fig:c-element-env} C-Element with environment example in both FSM and STG format}
+\end{figure}
+
+Both of these models, FSM in Figure~\ref{fig:c-element-env-fsm}, STG in Figure~\ref{fig:c-element-env-stg}, feature structures 
+where the transitions ``expand''. For example, in both models after the $c^{+}$ transition, the following transitions are ``expanded''. 
+This structure indicates concurrency in both models. However, what these expansions show is different in either model. 
+
+In the STG, there are two transitions in the expansion, $a^{-}$ and $b^{-}$, one on each branch and this shows that the transitions
+ occur concurrently, and either can occur before the other. However, for the transition following these, $c^{-}$ both must occur.
+In the FSM, each branch features both possible orders of both signals, $a^{-}$ then $b^{-}$, or $b^{-}$ then $a^{-}$, which must occur
+for $c^{-}$ to occur. It could be argued that in the FSM of this example, the concurrency it shows indiciates more explicitly that either order of the
+signal transitions can occur, which may be preferable in some cases. However, the STG model does not contain the states and thus looks
+cleaner and simpler.
+
+The concurrency in this example is fairly minimal, and the resulting expansions in both models are similar. Further differences arise when 
+concurrency occurs between more than two signals.
