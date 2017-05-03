@@ -18,7 +18,7 @@ high-level behaviour of a stopwatch.
 
 \begin{figure}[h]
 \begin{centering}
-\includegraphics[scale=0.5]{images/stopwatch-fsm}
+\includegraphics[scale=0.4]{images/stopwatch-fsm}
 \par\end{centering}
 \protect\caption{\label{fig:stopwatch} Stopwatch FSM}
 \end{figure}
@@ -73,7 +73,7 @@ associated with the transitions between states can be signal transitions. For ex
 
 \begin{figure}[h]
 \begin{centering}
-\includegraphics[scale=0.5]{images/handshake-fsm}
+\includegraphics[scale=0.4]{images/handshake-fsm}
 \par\end{centering}
 \protect\caption{\label{fig:handshake-fsm} Handshake FSM}
 \end{figure}
@@ -118,14 +118,16 @@ the methods that they use to show the interactions between signals are quite var
 shows a handshake in both STG and FSM form.
 
 \begin{figure}[H]
+\centering
 \subfigure[Handshake in FSM form] {
   \centering
-  \includegraphics[scale=0.5]{images/handshake-fsm}
+  \includegraphics[scale=0.4]{images/handshake-fsm}
   \label{fig:handshakes-all-fsm}
   }
+\hspace{20mm}
 \subfigure[Handshake in STG form] {
   \centering
-  \includegraphics[scale=0.64]{images/handshake-stg}
+  \includegraphics[scale=0.5]{images/handshake-stg}
   \label{fig:handshakes-all-stg}
   }
   \caption{\label{fig:handshakes-all} Handshakes in both FSM and STG format}
@@ -145,6 +147,7 @@ The environment is composed of two inverters, both inputs of which are signal $c
 If we model these as both an FSM and an STG, we are provided with the models as seen in Figure~\ref{fig:c-element-env}.
 
 \begin{figure}[H]
+\centering
 \subfigure[A C-Element with environment in FSM form] {
   \centering
   \includegraphics[scale=0.45]{images/c-element-env-fsm}
@@ -172,13 +175,13 @@ cleaner and simpler.
 The concurrency in this example is fairly minimal, and the resulting expansions in both models are
 similar. The differences become more apparent when the number of concurrent signal transitions increases. 
  
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
 	\subfigure[An example with 3 concurrent signals in FSM form] {
 		\includegraphics[scale=0.4]{images/concurrency-fsm}
 		\label{fig:concurrency-fsm}
 	}
-\hspace{10mm}
+\hspace{30mm}
 	\subfigure[An example with 3 concurrent signals in STG form] {
 		\includegraphics[scale=0.4]{images/concurrency-stg}
 		\label{fig:concurrency-stg}
@@ -197,7 +200,7 @@ have occurred, for a "join" where $e^{+}$ can occur.
 In an example of this size, it is still relatively clear in both the FSM and STG how these signals can 
 transition concurrently, however, as the number of concurrent signals increase, the size of the 
 expansion in the FSM will also increase, leading to further arcs which will cross over, and make 
-comprehension of such a model more difficult. 
+comprehension of such a model difficult. 
 
 The size of an FSM in comparison to an STG is not simply dictated by the number of concurrent signals 
 in a snippet, however. Due to the encoding of the states, which is based on the states of the signals, 
