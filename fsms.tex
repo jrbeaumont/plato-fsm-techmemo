@@ -163,11 +163,54 @@ where the transitions ``expand''. For example, in both models after the $c^{+}$ 
 This structure indicates concurrency in both models. However, what these expansions show is different in either model. 
 
 In the STG, there are two transitions in the expansion, $a^{-}$ and $b^{-}$, one on each branch and this shows that the transitions
- occur concurrently, and either can occur before the other. However, for the transition following these, $c^{-}$ both must occur.
+ occur concurrently, and either can occur before the other. However, for the transition following these, $c^{-}$, both must occur.
 In the FSM, each branch features both possible orders of both signals, $a^{-}$ then $b^{-}$, or $b^{-}$ then $a^{-}$, which must occur
 for $c^{-}$ to occur. It could be argued that in the FSM of this example, the concurrency it shows indiciates more explicitly that either order of the
 signal transitions can occur, which may be preferable in some cases. However, the STG model does not contain the states and thus looks
 cleaner and simpler.
 
-The concurrency in this example is fairly minimal, and the resulting expansions in both models are similar. Further differences arise when 
-concurrency occurs between more than two signals.
+The concurrency in this example is fairly minimal, and the resulting expansions in both models are
+similar. The differences become more apparent when the number of concurrent signal transitions increases. 
+ 
+\begin{figure}[H]
+	\centering
+	\subfigure[An example with 3 concurrent signals in FSM form] {
+		\includegraphics[scale=0.4]{images/concurrency-fsm}
+		\label{fig:concurrency-fsm}
+	}
+\hspace{10mm}
+	\subfigure[An example with 3 concurrent signals in STG form] {
+		\includegraphics[scale=0.4]{images/concurrency-stg}
+		\label{fig:concurrency-stg}
+	}
+	\caption{\label{fig:concurrency-example} An example with 3 concurrent signal transitions}
+\end{figure} 
+
+Figure~\ref{fig:concurrency-example} is an example of both model formalisms containing three 
+concurrent signal transitions. Each one is a snippet, and does not feature the whole model. 
+Figure~\ref{fig:concurrency-fsm} is the FSM form of this example, and as with the previous example, 
+this contains every possible order that these three signals can transition in, and this has lead to a wide 
+expansion, with arcs crossing over each other. In comparison, the expansion of the STG form, shown in 
+Figure~\ref{fig:concurrency-stg}, has much less expansion, with the three transitions all requiring to 
+have occurred, for a "join" where $e^{+}$ can occur. 
+
+In an example of this size, it is still relatively clear in both the FSM and STG how these signals can 
+transition concurrently, however, as the number of concurrent signals increase, the size of the 
+expansion in the FSM will also increase, leading to further arcs which will cross over, and make 
+comprehension of such a model more difficult. 
+
+The size of an FSM in comparison to an STG is not simply dictated by the number of concurrent signals 
+in a snippet, however. Due to the encoding of the states, which is based on the states of the signals, 
+meaning that an FSM can have $2^{n}$ possible states, where $n$ is the number of signals. It may be
+that not every possible state is reachable, but this can still mean that there are many states. 
+
+This phenomenon is known as \emph{state explosion}, meaning that where an STG may be able to 
+model behaviours, the FSM equivalent can have so many possible states that traversing it can be 
+computationally difficult. This is why STGs are preferred when modelling asynchronous systems, which 
+contain a lot of concurrency, and may have many signals. 
+
+As such, if a user chooses to translate a concept specification to an FSM to view it's intricacies and 
+possible ordering of signals, it is recommended that this is performed on smaller specifications, or on 
+smaller scenarios of a concept specification, which can be composed with other scenarios for a full 
+concept specification.
+ 
