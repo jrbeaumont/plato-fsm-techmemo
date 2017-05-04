@@ -6,12 +6,12 @@
 \section{Concepts to FSM translation algorithm}\label{sec:algorithm}
 
 The algorithm takes as input a complete Concept specification.
-The output of the algorithm is a .sg file, a file representation of an FSM.
+The output of the algorithm is a .sg file, a plaintext representation of an FSM\@.
 This can be imported into the \noun{Workcraft} tool-suite and viewed graphically as an FSM\@.
 
 Psuedocode for the translation algorithm can be seen in Algorithm~\ref{alg:fsm}.
-In brief, the algorithm begins by preparing the concept specification for the translation by combining the lists of arcs in a certain way (lines 1-5), 
-and directly extracts pairs of causes and effects from the Concepts specification (lines 6--10).
+In brief, the algorithm begins by preparing the concept specification for the translation by combining the lists of arcs in a certain way (lines 1--5), 
+and directly extracts pairs of causes and effects (lines 6--10).
 It then infers all possible source and destination states with associated arcs (lines 11--22).
 
 For our discussion of the algorithm, we will use the C-Element with environment 
@@ -128,11 +128,9 @@ These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt
 The \emph{effect} transition becomes the arc which links the source state to the destination state in the FSM\@.
 This result corresponds to the FSM in \cref{fig:c-element-env-fsm}.
 
-
-
 \begin{table}[ht]
 \hfill
-\begin{minipage}[t]{.38\textwidth}
+\begin{minipage}[]{.38\textwidth}
 \centering
 \caption{Partial state encodings.}\label{tab:enc}
 \begin{tabular}{@{}llll@{}}
@@ -167,10 +165,10 @@ This result corresponds to the FSM in \cref{fig:c-element-env-fsm}.
 \end{tabular}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{.58\textwidth}
+\begin{minipage}[]{.58\textwidth}
 \begin{algorithm}[H]
 \raggedright
-\begin{algorithmic}[1]	% Optional param is frequency of line numbering
+\begin{algorithmic}[5]	% Optional param is frequency of line numbering
 	\caption{Concepts to FSM Translation Algorithm\label{alg:fsm}}
 	\For {\textbf{each} effect $e$}
                     \State allCauses $\leftarrow$ \textbf{Concatenate} lists of causes for $e$ \label{alg:list}
