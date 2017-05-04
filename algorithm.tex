@@ -6,7 +6,7 @@
 \section{Concepts to FSM translation algorithm}\label{sec:algorithm}
 
 The algorithm takes as input a complete Concept specification.
-The output of the algorithm is a .sh file, a file representation of an FSM.
+The output of the algorithm is a .sg file, a file representation of an FSM.
 This can be imported into the \noun{Workcraft} tool-suite and viewed graphically as an FSM\@.
 
 Psuedocode for the translation algorithm can be seen in Algorithm~\ref{alg:fsm}.
@@ -14,9 +14,35 @@ In brief, the algorithm begins by preparing the concept specification for the tr
 and directly extracts pairs of causes and effects from the Concepts specification (lines 6--10).
 It then infers all possible source and destination states with associated arcs (lines 11--22).
 
+For our discussion of the algorithm, we will use the C-Element with environment 
+example, the translated FSM and STG for which can be seen in 
+Figure~\ref{fig:c-element-env}. Figure~\ref{fig:concepts_file} contains the 
+concepts file for this example, which can be translated to either an FSM or STG. 
+
+\begin{figure}[H]
+	\centering
+		\begin{minted}[fontsize=\normalsize]{haskell}
+        	  module CElement where
+        	  import Tuura.Concept.FSM
+
+        	  circuit a b c = protocol <> ports <> init 
+            	  where
+                	  protocol = cElement a b c <> env
+                	  env      = inverter c a <> inverter c b
+                	  ports    = inputs[a, b] <> outputs[c] 
+                	  init     = initialise0 [a, b, c]
+		\end{minted}
+	\vspace{-5mm}
+	\begin{centering}
+		\protect\caption{\label{fig:concepts_file}A concepts file for C-Element with an environment}
+		\par\end{centering}
+	
+\end{figure}
+
 There can be multiple ways of representing a specification using concepts, 
 however, all levels of abstraction available to the designer are built out of signal-level
-concepts. Given a specification, we can therefore break down 
+concepts. Given a specification, such as that shown in Figure~\ref{fig:concepts_file}, we can 
+therefore break down 
 all gate- and protocol-level constructs into `atoms', which significantly 
 simplifies the translation task. For now, we will ignore initial states and interface
 concepts, and focus on the arcs only.
