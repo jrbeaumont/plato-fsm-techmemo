@@ -5,41 +5,27 @@
 %% March 2017
 \section{Concepts to FSM translation algorithm}\label{sec:algorithm}
 
-The algorithm takes as input a complete Concepts specification.
-The output of the algorithm is a plaintext representation of a state graph.
-This can be imported into the \noun{Workcraft} tool-suite and viewed graphically as an FST\@.
+The algorithm takes as input a complete Concept specification.
+The output of the algorithm is a .sh file, a file representation of an FSM.
+This can be imported into the \noun{Workcraft} tool-suite and viewed graphically as an FSM\@.
 
-Psuedocode for the translation algorithm can be seen in~\cref{alg:fsm}.
-In brief, the algorithm directly extracts pairs of causes and effects from the Concepts specification (lines 1--5).
-It then infers all possible source and destination states with associated arcs (lines 6--17).
+Psuedocode for the translation algorithm can be seen in Algorithm~\ref{alg:fsm}.
+In brief, the algorithm begins by preparing the concept specification for the translation by combining the lists of arcs in a certain way (lines 1-5), 
+and directly extracts pairs of causes and effects from the Concepts specification (lines 6--10).
+It then infers all possible source and destination states with associated arcs (lines 11--22).
 
-In order to create a complete encoding of a single state, we must first find all of the signals that exist in the system.
-We do this by first removing any \emph{effect} transition which may occur in the \emph{cause} list to avoid duplicate signals.
-We then construct a signal list from each causality.
-Taking the union of the signal lists from all causalities then gives us the complete set of signals in the system.
-In our example, we obtain the list of signals $a$, $b$, $c$.
+There can be multiple ways of representing a specification using concepts, 
+however, all levels of abstraction available to the designer are built out of signal-level
+concepts. Given a specification, we can therefore break down 
+all gate- and protocol-level constructs into `atoms', which significantly 
+simplifies the translation task. For now, we will ignore initial states and interface
+concepts, and focus on the arcs only.
 
-Since each FST state must contain information for every signal, we must add to each causality any signals that are missing.
-\Cref{tab:enc} shows the new signals in bold, which are added with an `x', or `don't care' polarity since both rising or falling transitions give valid states for these signals.
-
-Now that all signals in the design are accounted for in each causality (that is, the concatenation of \emph{Causes} and \emph{Effect} in \cref{tab:enc} contains all the signals \texttt{a}, \texttt{b}, and \texttt{c}), we can begin constructing state encodings.
-We sort the signals such that the binary encoding will represent ascending signal names from left to right -- in this example, \texttt{abc}.
-Since the \emph{effect} transition tells us what the effect signal \emph{will become}, we have already obtained the destination state encodings for each arc in the FST\@.
-To obtain the source state encodings, we must flip the polarity of the \emph{effect} transition.
-The result is shown in \cref{tab:enc}.
-
-Note that we still have `don't care' polarity in some of our state encodings.
-Since this means the corresponding signal can be either high or low, we must translate such states into all possible states to obtain a complete FST\@.
-We expand these don't care states into all of the possible congruent transition permutations.
-For example, from the final row in \cref{tab:enc} we have the states \texttt{x01}, \texttt{x11}.
-These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt{101}, \texttt{111}.
-\Cref{tab:enc_complete} gives the complete source and destination state encodings.
-The \emph{effect} transition becomes the arc which links the source state to the destination state in the FST\@.
-
-\begin{table}[ht]
-\parbox{0.23\linewidth}{%
-\caption{Table}\label{tab:causality}
-\centering
+\begin{table}[h]
+\vspace{-2mm}
+\caption{Lists of cause transitions by effect transitions
+		\label{tab:list-of-concepts}}
+  \centering
 \begin{tabular}{@{}ll@{}}
 	\toprule
 	Causes & Effect\\ \midrule
@@ -51,13 +37,77 @@ The \emph{effect} transition becomes the arc which links the source state to the
 	$c^{+}$			& $b^{-}$ \\
 	\bottomrule
 \end{tabular}
-}
+\vspace{-5mm}
+\end{table}
+
+To start with we list all causes for each effect. 
+These lists can be found in Table~\ref{tab:list-of-concepts}.
+All of the included causalities are AND-causalities, and hence, there
+is at least one single cause transitions for each effect transition. 
+
+If OR-causality was included, the list of possible causes would be included with these
+AND-causalities. For example:  $a^{+}$, $b^{+}$, $[x^{+}, y^{+}]$ causing
+$c^{+}$. $x$ and $y$ are in a list of their own, and this shows OR-causality;
+either $x$ or $y$ must transition high for $c^{+}$ to occur. However, this does
+not account for the other AND-causalities. 
+
+In this case, we perform the \emph{Cartesian product}, which combines
+all AND- and OR-causalities. For the example above, this would produce:
+
+\vspace{-2mm}
+
+\begin{center}
+
+$a^{+}$, $b^{+}$, $x^{+}$ causes $c/1^{+}$
+
+$a^{+}$, $b^{+}$, $y^{+}$ causes $c/2^{+}$
+
+\end{center}
+
+\vspace{-2mm}
+
+\noindent This includes one of the OR-causality transitions with all of the 
+AND-causality transitions. It also leaves us with two separate $c^{+}$ 
+transitions. These are both needed in order to show the two possible 
+combinations of transitions necessary for $c^{+}$, and would be included as two
+separate transition objects in an STG. 
+
+However, for the C-element with environment example, there is no OR-causality. 
+We still perform the step of applying the Cartesian product to each of these 
+lists of transitions for each effect transition, but the result will be the 
+same as the original lists, seen in Table~\ref{tab:list-of-concepts}.
+
+In order to create a complete encoding of a single state, we must first find all of the signals that exist in the system.
+We do this by first removing any \emph{effect} transition which may occur in the \emph{cause} list to avoid duplicate signals.
+We then construct a signal list from each causality.
+Taking the union of the signal lists from all causalities then gives us the complete set of signals in the system.
+In our example, we obtain the list of signals $a$, $b$, $c$.
+
+Since, for the specific type of FSM that the algorithm translates the specification to, FSTs, each state must contain information for every signal, 
+and we must add to each causality any signals that are missing.
+\Cref{tab:enc} shows the new signals in bold, which are added with an `x', or `don't care' polarity since both rising or falling transitions give valid states for these signals.
+
+Now that all signals in the design are accounted for in each causality (that is, the concatenation of \emph{Causes} and \emph{Effect} in \cref{tab:enc} contains all the signals \texttt{a}, \texttt{b}, and \texttt{c}), we can begin constructing state encodings.
+We sort the signals such that the binary encoding will represent ascending signal names from left to right -- in this example, \texttt{abc}.
+Since the \emph{effect} transition tells us what the effect signal \emph{will become}, we have already obtained the destination state encodings for each arc in the FSM\@.
+To obtain the source state encodings, we must flip the polarity of the \emph{effect} transition.
+The result is shown in \cref{tab:enc}.
+
+Note that we still have `don't care' polarity in some of our state encodings.
+Since this means the corresponding signal can be either high or low, we must translate such states into all possible states to obtain a complete model\@.
+We expand these don't care states into all of the possible congruent transition permutations.
+For example, from the final row in \cref{tab:enc} we have the states \texttt{x01}, \texttt{x11}.
+These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt{101}, \texttt{111}.
+\Cref{tab:enc_complete} gives the complete source and destination state encodings.
+The \emph{effect} transition becomes the arc which links the source state to the destination state in the FSM\@.
+
+\begin{table}[h]
+\centering
 %
 \hfill
 %
-\parbox{0.43\linewidth}{%
+\parbox{0.45\linewidth}{%
 \caption{Missing signals added to cause list (bold) with incomplete state encoding.}\label{tab:enc}
-\centering
 \begin{tabular}{@{}llll@{}}
 	\toprule
 	& & \multicolumn{2}{c}{Encoding (\texttt{abc})}\\ \cmidrule(l){3-4}
@@ -74,9 +124,8 @@ The \emph{effect} transition becomes the arc which links the source state to the
 %
 \hfill
 %
-\parbox{0.28\linewidth}{%
+\parbox{0.45\linewidth}{%
 \caption{Complete state encodings after expansion of `don't care' states.}\label{tab:enc_complete}
-\centering
 \begin{tabular}{@{}llll@{}}
 	\toprule
 	& \multicolumn{2}{c}{Encoding (\texttt{abc})}\\ \cmidrule(l){2-3}
@@ -99,9 +148,14 @@ The \emph{effect} transition becomes the arc which links the source state to the
 \begin{algorithm}[H]
 \begin{algorithmic}[1]	% Optional param is frequency of line numbering
 	\caption{Concepts to FSM Translation Algorithm\label{alg:fsm}}
-	\For {\textbf{each} \emph{causality} ([effect], cause) \textbf{in} causalities}
-		\State \textbf{removeAll} cause \textbf{from} [effect]
-		\State [signalList] $\leftarrow$ \textbf{concatenate} ([effect], cause)
+	\For {\textbf{each} effect $e$}
+                    \State allCauses $\leftarrow$ \textbf{Concatenate} lists of causes for $e$ \label{alg:list}
+                    \State [causes] $\leftarrow$ \textbf{CartesianProduct} allCauses
+                    \State \textbf{addAll} $causalitity$ ([causes], effect) \textbf{to} causalities
+          \EndFor
+	\For {\textbf{each} \emph{causality} ([cause], effect) \textbf{in} causalities}
+		\State \textbf{removeAll} effect \textbf{from} [cause]
+		\State [signalList] $\leftarrow$ \textbf{concatenate} ([cause], effect)
 	\EndFor
 	\State allSignals $\leftarrow$ \textbf{setUnion} ([[signalList]])
 	\For {\textbf{each} \emph{transitionList} tl \textbf{in} [[signalList]]}
