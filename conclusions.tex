@@ -1,3 +1,47 @@
 %% Plato FSM Translation Tech Memo
 %% Conclusion
 \section {Conclusions \label {sec:conclusions}}
+
+This document contains an algorithm for translating concept specifications,
+describing the behaviours of the signals in an asynchronous system, to Finite
+State Machines. We discuss Finite State Machines, and a form of FSMs that is 
+used more specifically for the purpose of detailing the interactions between 
+signals in a circuit, Finite State Transducers. We compare the differences in how
+FSMs and STGs model concurrency, and the benefits that STGs provide in this 
+case. We work through the algorithm with the example of a C-Element with an 
+environment. Finally, we briefly discussed a design flow using this algorithm. 
+
+This concept to FSM translation algorithm, as well as the algorithm to translate 
+concepts to STGs is implemented in an open-source tool, \noun{Plato}. This tool 
+also features the domain-specific language of concepts, including several built-in 
+concepts providing some signal-, gate- and protocol-level concepts. This tool 
+allows a user to define their own concepts, and re-use them in multiple concept 
+specifications by importing the file they are in into this specification. 
+
+\noun{Plato} provides several features to help improve the design-flow of 
+asynchronous circuits, which up until know has often involved a blank page to 
+start a design, unable to reuse any structures from previous designs which may 
+be useful. This reuse can cause a reduced design time for asynchronous circuits, 
+which in turn can make them more favourable. 
+
+Providing the ability to translate concepts to FSMs allows a user to view the 
+intricacies of a system, possible orderings of signals and how states in the 
+system may be affected by signal changes, which may be desirable to an 
+industrial designer, who may understand a modelling formalism such as an FSM
+more than an STG. This is reccomended only for small scenarios of snippets of 
+such as a design, as a larger system can make for many possible states, which 
+can take a long time to translate due to state explosion. 
+
+However, concept specifications themselves cannot be verified and synthesized 
+and creating tools for this purpose is a time consuming endeavour. 
+FSMs are also not the preferred model to try verification and synthesis on. 
+Therefore, it is preferable to use STGs, which feature many tools for 
+such operations. Thus, concepts can be freely translated to either FSMs or STGs
+without editing the concepts. 
+
+\noun{Plato} is available from~\cite{2017_plato_github}, and is also integrated 
+into, and provided in the download of \noun{Workcraft}, available 
+from~\cite{Workcraft_website} an open-source tool 
+providing a GUI to author and translate concepts, visualise the resulting models, 
+and use them with the existing tools for verification and synthesis, further 
+increasing the ease and speed of design.
