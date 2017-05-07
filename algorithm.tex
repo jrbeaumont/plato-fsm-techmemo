@@ -6,12 +6,12 @@
 \section{Concepts to FSM translation algorithm}\label{sec:algorithm}
 
 The algorithm takes as input a complete Concept specification.
-The output of the algorithm is a .sg file, a file representation of an FSM.
+The output of the algorithm is a .sg file, a plaintext representation of an FSM\@.
 This can be imported into the \noun{Workcraft} tool-suite and viewed graphically as an FSM\@.
 
 Psuedocode for the translation algorithm can be seen in Algorithm~\ref{alg:fsm}.
-In brief, the algorithm begins by preparing the concept specification for the translation by combining the lists of arcs in a certain way (lines 1-5), 
-and directly extracts pairs of causes and effects from the Concepts specification (lines 6--10).
+In brief, the algorithm begins by preparing the concept specification for the translation by combining the lists of arcs in a certain way (lines 1--5), 
+and directly extracts pairs of causes and effects (lines 6--10).
 It then infers all possible source and destination states with associated arcs (lines 11--22).
 
 For our discussion of the algorithm, we will use the C-Element with environment 
@@ -120,20 +120,19 @@ To obtain the source state encodings, we must flip the polarity of the \emph{eff
 The result is shown in \cref{tab:enc}.
 
 Note that we still have `don't care' polarity in some of our state encodings.
-Since this means the corresponding signal can be either high or low, we must translate such states into all possible states to obtain a complete model\@.
+Since this means the corresponding signal can be either high or low, we must translate such states into all possible states to obtain a complete model.
 We expand these don't care states into all of the possible congruent transition permutations.
 For example, from the final row in \cref{tab:enc} we have the states \texttt{x01}, \texttt{x11}.
 These will be expanded to the state pairs \texttt{001}, \texttt{011} and \texttt{101}, \texttt{111}.
 \Cref{tab:enc_complete} gives the complete source and destination state encodings.
 The \emph{effect} transition becomes the arc which links the source state to the destination state in the FSM\@.
+This result corresponds to the FSM in \cref{fig:c-element-env-fsm}.
 
-\begin{table}[h]
-\centering
-%
+\begin{table}[ht]
 \hfill
-%
-\parbox{0.45\linewidth}{%
-\caption{Missing signals added to cause list (bold) with incomplete state encoding.}\label{tab:enc}
+\begin{minipage}[]{.38\textwidth}
+\centering
+\caption{Partial state encodings.}\label{tab:enc}
 \begin{tabular}{@{}llll@{}}
 	\toprule
 	& & \multicolumn{2}{c}{Encoding (\texttt{abc})}\\ \cmidrule(l){3-4}
@@ -146,12 +145,8 @@ The \emph{effect} transition becomes the arc which links the source state to the
 	$\mathbf{a^{x}}$, $c^{+}$	& $b^{-}$ & \texttt{x01} & \texttt{x11}\\
 	\bottomrule
 \end{tabular}
-}
-%
-\hfill
-%
-\parbox{0.45\linewidth}{%
-\caption{Complete state encodings after expansion of `don't care' states.}\label{tab:enc_complete}
+\\
+\caption{Complete state encodings.}\label{tab:enc_complete}
 \begin{tabular}{@{}llll@{}}
 	\toprule
 	& \multicolumn{2}{c}{Encoding (\texttt{abc})}\\ \cmidrule(l){2-3}
@@ -168,11 +163,12 @@ The \emph{effect} transition becomes the arc which links the source state to the
 	$b^{-}$ & \texttt{101} & \texttt{111}\\
 	\bottomrule
 \end{tabular}
-}
-\end{table}
-
+\end{minipage}
+\hfill
+\begin{minipage}[]{.58\textwidth}
 \begin{algorithm}[H]
-\begin{algorithmic}[1]	% Optional param is frequency of line numbering
+\raggedright
+\begin{algorithmic}[5]	% Optional param is frequency of line numbering
 	\caption{Concepts to FSM Translation Algorithm\label{alg:fsm}}
 	\For {\textbf{each} effect $e$}
                     \State allCauses $\leftarrow$ \textbf{Concatenate} lists of causes for $e$ \label{alg:list}
@@ -190,11 +186,16 @@ The \emph{effect} transition becomes the arc which links the source state to the
 			\State \textbf{setPolarity} (t, `x')
 		\EndFor
 		\State allTransitions $\leftarrow$ \textbf{concatenate} (tl, missingTransitions)
-		\State sortedTransitions $\leftarrow$ \textbf{sortBySignalName} (allTransitions)
+		\State sortedTransitions $\leftarrow$
+		\Statex[2] \textbf{sortBySignalName} (allTransitions)
 		\State destEncodings $\leftarrow$ \textbf{getPolarity} (sortedTransitions)
 		\State srcEncodings $\leftarrow$ \textbf{flipEffectPolarity} (destEncodings)
-		\State incompleteArcs $\leftarrow$ \textbf{makeArcs} (srcEncodings, destEncodings)
+		\State incompleteArcs $\leftarrow$
+		\Statex[2] \textbf{makeArcs} (srcEncodings, destEncodings)
 		\State \textbf{expandX} (incompleteArcs)
 	\EndFor
 \end{algorithmic}
 \end{algorithm}
+\end{minipage}
+\hfill
+\end{table}
